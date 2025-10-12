@@ -14,8 +14,10 @@ address = fake_ru.address()
 
 
 def test_user_page():
-    browser.open("https://demoqa.com/automation-practice-form")
+    browser.open("/automation-practice-form")
     browser.element('.text-center').should(be.visible)
+
+    #WHEN
     browser.element('#firstName').type(first_name)
     browser.element('#lastName').type(last_name)
     browser.element('#userEmail').type(email)
@@ -34,7 +36,8 @@ def test_user_page():
     browser.all('.custom-checkbox').element_by(have.text("Music")).click()
     browser.all('.custom-checkbox').element_by(have.text("Reading")).click()
     correct_dir = os.path.abspath(os.path.dirname(__file__))
-    file_path = os.path.join(correct_dir, 'mem-kot.jpg')
+    resources_dir = os.path.join(correct_dir, 'resources')
+    file_path = os.path.join(resources_dir, 'mem-kot.jpg')
     browser.element('#uploadPicture').send_keys(file_path)
     browser.element('#currentAddress').type(address)
     browser.element("#state").perform(command.js.scroll_into_view)
@@ -50,6 +53,7 @@ def test_user_page():
 
     browser.element('#submit').perform(command.js.click)
 
+    #THEN
     browser.element('.table').all('td').even.should(
         have.exact_texts(
             full_name,
@@ -69,4 +73,3 @@ def test_user_page():
 
 
 
-# /html/body/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[2]/div[2]/label
