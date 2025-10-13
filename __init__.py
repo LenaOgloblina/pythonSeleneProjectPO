@@ -1,0 +1,2 @@
+def resource():
+    return None

@@ -1,8 +1,7 @@
-from selene import browser
-import os
 from faker import Faker
-from selene.support.shared import browser
-from selene import have, be, command
+from selene import have
+
+from pythonSeleneProjectPO.pages.registration_page import RegistrationPage
 
 fake = Faker()
 fake_ru = Faker('ru_RU')
@@ -14,47 +13,29 @@ address = fake_ru.address()
 
 
 def test_user_page():
-    browser.open("/automation-practice-form")
-    browser.element('.text-center').should(be.visible)
 
-    #WHEN
-    browser.element('#firstName').type(first_name)
-    browser.element('#lastName').type(last_name)
-    browser.element('#userEmail').type(email)
-    browser.element('input[value="Female"]+label').click()
-    browser.element('#userNumber').type('9995555555')
-    browser.element('#dateOfBirthInput').click()
-    browser.element('.react-datepicker__year-select').click()
-    browser.element('[value="1990"]').click()
-    browser.element('.react-datepicker__month-select').click()
-    browser.element('[value="9"]').click()
-    browser.element('.react-datepicker__day--028').click()
+    registration_page = RegistrationPage()
+    registration_page.open()
 
-    browser.element('#subjectsInput').type('Hindi').press_tab()
-    browser.element('#subjectsInput').type('Social Studies').press_tab()
-
-    browser.all('.custom-checkbox').element_by(have.text("Music")).click()
-    browser.all('.custom-checkbox').element_by(have.text("Reading")).click()
-    correct_dir = os.path.abspath(os.path.dirname(__file__))
-    resources_dir = os.path.join(correct_dir, 'resources')
-    file_path = os.path.join(resources_dir, 'mem-kot.jpg')
-    browser.element('#uploadPicture').send_keys(file_path)
-    browser.element('#currentAddress').type(address)
-    browser.element("#state").perform(command.js.scroll_into_view)
-    browser.element("#state").click()
-    browser.all("[id^=react-select][id*=option]").element_by(
-        have.exact_text('Haryana')
-    ).click()
-    browser.element("#city").perform(command.js.scroll_into_view)
-    browser.element("#city").click()
-    browser.all("[id^=react-select][id*=option]").element_by(
-        have.exact_text('Karnal')
-    ).click()
-
-    browser.element('#submit').perform(command.js.click)
+    # WHEN
+    registration_page.fill_first_name(first_name)
+    registration_page.fill_last_name(last_name)
+    registration_page.fill_email(email)
+    registration_page.fill_gender('Female')
+    registration_page.fill_phone('9995555555')
+    registration_page.fill_date_of_birth('1990', 'October', '28')
+    registration_page.fill_subjects('Hindi')
+    registration_page.fill_subjects('Social Studies')
+    registration_page.fill_hobbies('Music')
+    registration_page.fill_hobbies('Reading')
+    registration_page.select_picture('mem-kot.jpg')
+    registration_page.fill_address(address)
+    registration_page.fill_state('Haryana')
+    registration_page.fill_city('Karnal')
+    registration_page.press_registration_button()
 
     #THEN
-    browser.element('.table').all('td').even.should(
+    registration_page.registered_user_data.should(
         have.exact_texts(
             full_name,
             email,
@@ -65,9 +46,14 @@ def test_user_page():
             'Music, Reading',
             'mem-kot.jpg',
             address,
-            'Haryana Karnal',
+            'Haryana Karnal'
         )
     )
+    # registration_page.should_have_registered_user_info_with(full_name, email, 'Female',
+    #                                                         '9995555555', '28 October,1990',
+    #                                                         'Hindi, Social Studies', 'Music, Reading',
+    #                                                       'mem-kot.jpg', address, 'Haryana Karnal')
+
 
 
 
