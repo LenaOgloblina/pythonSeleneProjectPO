@@ -1,0 +1,5 @@
+attrs~=25.3.0
+selene~=2.0.0rc9
+pytest~=8.4.1
+Faker~=37.11.0
+allure-pytest~=2.14.1
