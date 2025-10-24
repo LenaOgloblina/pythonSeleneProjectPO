@@ -14,5 +14,5 @@ def test_githab():
 
     browser.element('[data-content="Pull requests"]').click()
 
-    browser.element(by.partial_text('13')).should(be.visible)   # #79
+    browser.element(by.partial_text('#79')).should(be.visible)   # #79
 
